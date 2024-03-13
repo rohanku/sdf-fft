@@ -4,8 +4,10 @@ package fft
 
 import chisel3._
 import chisel3.util._
-import chisel3.experimental.FixedPoint
+//import chisel3.experimental.FixedPoint
 import chisel3.stage.{ChiselGeneratorAnnotation, ChiselStage}
+
+import fixedpoint._
 
 import dsptools._
 import dsptools.numbers._

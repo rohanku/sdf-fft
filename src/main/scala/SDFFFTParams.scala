@@ -3,8 +3,10 @@
 package fft
 
 import chisel3._
-import chisel3.experimental._
+//import chisel3.experimental._
 import chisel3.util._
+
+import fixedpoint._
 
 import dsptools._
 import dsptools.numbers._
@@ -127,14 +129,14 @@ object FFTParams {
     minSRAMdepth:    Int = 0,
     singlePortSRAM:  Boolean = false
   ): FFTParams[FixedPoint] = {
-    val protoIQ = DspComplex(FixedPoint(dataWidth.W, binPoint.BP))
-    val protoIQOut = DspComplex(FixedPoint(dataWidthOut.W, binPointOut.BP))
+    val protoIQ = DspComplex(FixedPoint(dataWidth.W, BinaryPoint(binPoint)))
+    val protoIQOut = DspComplex(FixedPoint(dataWidthOut.W, BinaryPoint(binPointOut)))
     // to allow for 1, -1, j, and -j to be expressed.
-    val protoTwiddle = DspComplex(FixedPoint(twiddleWidth.W, (twiddleWidth - 2).BP))
+    val protoTwiddle = DspComplex(FixedPoint(twiddleWidth.W, BinaryPoint(twiddleWidth - 2)))
     // protoIQs
     val protoIQstages = Array.fill(log2Up(numPoints))(protoIQ).zip(expandLogic.scanLeft(0)(_ + _).tail).map {
       case ((protoIQ, expandLogic)) => {
-        DspComplex(FixedPoint((protoIQ.real.getWidth + expandLogic).W, binPoint.BP))
+        DspComplex(FixedPoint((protoIQ.real.getWidth + expandLogic).W, BinaryPoint(binPoint)))
       }
     }
     FFTParams(
